@@ -513,7 +513,10 @@ function openModal(child) {
                     <div class="detail-icon">📍</div>
                     <div class="detail-content">
                         <div class="detail-label">Endereço</div>
-                        <div class="detail-value">${escapeHtml(child.endereco)}</div>
+                        <div class="detail-value">
+                            ${escapeHtml(child.endereco)}
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(child.endereco)}" class="maps-btn" target="_blank" rel="noopener noreferrer">Ver no Mapa</a>
+                        </div>
                     </div>
                 </div>
             ` : ''}
