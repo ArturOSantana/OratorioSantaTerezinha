@@ -1,6 +1,6 @@
 // Configuration
 const USE_LOCAL_DATA = false;
-const SHEET_ID = '';
+const SHEET_ID = window.ENV_SHEET_ID;
 const SHEET_NAME = 'Sheet1';
 
 // State

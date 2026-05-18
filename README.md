@@ -16,6 +16,16 @@ Sistema web responsivo para gerenciamento e visualização de informações das 
 
 ## Como Usar
 
+### Configuração de Segurança
+
+1. **Configure a senha de acesso:**
+   - Copie o arquivo `env.example.js` para `env.js`
+   - Edite `env.js` e altere a senha:
+   ```javascript
+   window.ENV_AUTH_PASSWORD = 'sua_senha_segura';
+   ```
+   - O arquivo `env.js` está no `.gitignore` e não será enviado ao repositório
+
 ### Configuração da Planilha Google Sheets
 
 1. **Torne sua planilha pública:**

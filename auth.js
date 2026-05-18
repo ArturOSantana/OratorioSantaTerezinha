@@ -1,14 +1,11 @@
-// Sistema de autenticação simples
 const AUTH_KEY = 'oratorio_auth';
-const AUTH_PASSWORD = '';
+const AUTH_PASSWORD = window.ENV_AUTH_PASSWORD;
 
-// Verificar se está autenticado
 function isAuthenticated() {
     const auth = sessionStorage.getItem(AUTH_KEY);
     return auth === 'true';
 }
 
-// Fazer login
 function login(password) {
     if (password === AUTH_PASSWORD) {
         sessionStorage.setItem(AUTH_KEY, 'true');
@@ -17,13 +14,11 @@ function login(password) {
     return false;
 }
 
-// Fazer logout
 function logout() {
     sessionStorage.removeItem(AUTH_KEY);
     window.location.reload();
 }
 
-// Verificar autenticação ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     if (!isAuthenticated()) {
         showLoginScreen();
@@ -32,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Mostrar tela de login
 function showLoginScreen() {
     document.body.innerHTML = `
         <div class="login-container">
@@ -55,7 +49,6 @@ function showLoginScreen() {
         </div>
     `;
 
-    // Adicionar estilos de login
     const style = document.createElement('style');
     style.textContent = `
         .login-container {
@@ -145,7 +138,6 @@ function showLoginScreen() {
     `;
     document.head.appendChild(style);
 
-    // Adicionar evento de submit
     document.getElementById('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const password = document.getElementById('passwordInput').value;
@@ -160,19 +152,15 @@ function showLoginScreen() {
         }
     });
 
-    // Focar no input
     setTimeout(() => {
         document.getElementById('passwordInput').focus();
     }, 100);
 }
 
-// Mostrar conteúdo principal
 function showMainContent() {
-    // O conteúdo já está no HTML, apenas garantir que está visível
     document.querySelector('.container').style.display = 'block';
 }
 
-// Adicionar botão de logout (opcional)
 function addLogoutButton() {
     const header = document.querySelector('.header-content');
     if (header && isAuthenticated()) {
@@ -184,7 +172,6 @@ function addLogoutButton() {
     }
 }
 
-// Exportar funções
 window.isAuthenticated = isAuthenticated;
 window.logout = logout;
 window.addLogoutButton = addLogoutButton;
