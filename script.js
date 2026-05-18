@@ -7,11 +7,15 @@ const SHEET_NAME = 'Sheet1';
 let allChildren = [];
 let filteredChildren = [];
 let currentFilter = 'all';
+let currentIdadeFilter = 'all';
+let currentSort = 'default';
 
 // DOM Elements
 const childrenList = document.getElementById('childrenList');
 const searchInput = document.getElementById('searchInput');
 const filterButtons = document.querySelectorAll('.filter-btn');
+const idadeFilter = document.getElementById('idadeFilter');
+const sortOrder = document.getElementById('sortOrder');
 const loading = document.getElementById('loading');
 const emptyState = document.getElementById('emptyState');
 const modal = document.getElementById('childModal');
@@ -116,10 +120,14 @@ function parseCSV(csv) {
         // Telefone de contato principal
         const telefoneContato = telefoneEmergencia || telefoneMae || telefonePai;
         
+        // Normalizar idade
+        const idadeNormalizada = normalizeIdade(idade);
+        
         children.push({
             id: i - 5, // Ajustar ID para começar de 1
             nome: nome,
-            idade: idade || 'Não informado',
+            idade: idadeNormalizada.texto,
+            idadeNumero: idadeNormalizada.numero,
             nomesPais: nomesPais,
             telefoneContato: telefoneContato,
             telefoneMae: telefoneMae,
@@ -224,6 +232,22 @@ function getExampleData() {
     ];
 }
 
+// Normalize idade to always show "X anos"
+function normalizeIdade(idade) {
+    if (!idade || idade.trim() === '') {
+        return { texto: 'Não informado', numero: 0 };
+    }
+    
+    // Extrair número da idade
+    const match = idade.match(/(\d+)/);
+    if (match) {
+        const numero = parseInt(match[1]);
+        return { texto: `${numero} anos`, numero: numero };
+    }
+    
+    return { texto: idade, numero: 0 };
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Search
@@ -233,6 +257,12 @@ function setupEventListeners() {
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => handleFilter(btn.dataset.filter));
     });
+    
+    // Idade filter
+    idadeFilter.addEventListener('change', handleIdadeFilter);
+    
+    // Sort order
+    sortOrder.addEventListener('change', handleSort);
     
     // Close modal on escape
     document.addEventListener('keydown', (e) => {
@@ -245,14 +275,7 @@ function setupEventListeners() {
 // Handle search
 function handleSearch(e) {
     const searchTerm = e.target.value.toLowerCase().trim();
-    
-    filteredChildren = allChildren.filter(child => {
-        const matchesSearch = child.nome.toLowerCase().includes(searchTerm);
-        const matchesFilter = applyFilter(child, currentFilter);
-        return matchesSearch && matchesFilter;
-    });
-    
-    renderChildren();
+    applyFiltersAndSort(searchTerm);
 }
 
 // Handle filter
@@ -264,14 +287,36 @@ function handleFilter(filter) {
         btn.classList.toggle('active', btn.dataset.filter === filter);
     });
     
-    // Apply filter
     const searchTerm = searchInput.value.toLowerCase().trim();
-    
+    applyFiltersAndSort(searchTerm);
+}
+
+// Handle idade filter
+function handleIdadeFilter(e) {
+    currentIdadeFilter = e.target.value;
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    applyFiltersAndSort(searchTerm);
+}
+
+// Handle sort
+function handleSort(e) {
+    currentSort = e.target.value;
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    applyFiltersAndSort(searchTerm);
+}
+
+// Apply all filters and sort
+function applyFiltersAndSort(searchTerm = '') {
+    // Filter
     filteredChildren = allChildren.filter(child => {
         const matchesSearch = !searchTerm || child.nome.toLowerCase().includes(searchTerm);
-        const matchesFilter = applyFilter(child, filter);
-        return matchesSearch && matchesFilter;
+        const matchesFilter = applyFilter(child, currentFilter);
+        const matchesIdade = applyIdadeFilter(child, currentIdadeFilter);
+        return matchesSearch && matchesFilter && matchesIdade;
     });
+    
+    // Sort
+    applySorting();
     
     renderChildren();
 }
@@ -281,7 +326,6 @@ function applyFilter(child, filter) {
     if (filter === 'all') return true;
     
     if (filter === 'atencao') {
-        // Atenção especial: tem alergia OU condição de saúde OU medicamento
         return child.temAlergia === 'Sim' ||
                child.temCondicaoSaude === 'Sim' ||
                child.temMedicamento === 'Sim';
@@ -292,6 +336,32 @@ function applyFilter(child, filter) {
     }
     
     return false;
+}
+
+// Apply idade filter
+function applyIdadeFilter(child, filter) {
+    if (filter === 'all') return true;
+    
+    const idade = child.idadeNumero;
+    
+    if (filter === '0-6') return idade >= 0 && idade <= 6;
+    if (filter === '7-9') return idade >= 7 && idade <= 9;
+    if (filter === '10-12') return idade >= 10 && idade <= 12;
+    if (filter === '13+') return idade >= 13;
+    
+    return true;
+}
+
+// Apply sorting
+function applySorting() {
+    if (currentSort === 'alfabetica') {
+        filteredChildren.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    } else if (currentSort === 'idade-asc') {
+        filteredChildren.sort((a, b) => a.idadeNumero - b.idadeNumero);
+    } else if (currentSort === 'idade-desc') {
+        filteredChildren.sort((a, b) => b.idadeNumero - a.idadeNumero);
+    }
+    // 'default' mantém a ordem original
 }
 
 // Render children cards
