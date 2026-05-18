@@ -145,6 +145,7 @@ function parseCSV(csv) {
     }
     
     console.log('Crianças processadas:', children.length);
+    console.log('Exemplo de criança processada:', children[0]);
     return children;
 }
 
@@ -245,6 +246,7 @@ function normalizeIdade(idade) {
         return { texto: `${numero} anos`, numero: numero };
     }
     
+    // Se não encontrou número, retorna o texto original
     return { texto: idade, numero: 0 };
 }
 
@@ -307,6 +309,8 @@ function handleSort(e) {
 
 // Apply all filters and sort
 function applyFiltersAndSort(searchTerm = '') {
+    console.log('Aplicando filtros - Busca:', searchTerm, 'Filtro:', currentFilter, 'Idade:', currentIdadeFilter, 'Ordenação:', currentSort);
+    
     // Filter
     filteredChildren = allChildren.filter(child => {
         const matchesSearch = !searchTerm || child.nome.toLowerCase().includes(searchTerm);
@@ -314,6 +318,8 @@ function applyFiltersAndSort(searchTerm = '') {
         const matchesIdade = applyIdadeFilter(child, currentIdadeFilter);
         return matchesSearch && matchesFilter && matchesIdade;
     });
+    
+    console.log('Crianças filtradas:', filteredChildren.length);
     
     // Sort
     applySorting();
@@ -354,12 +360,17 @@ function applyIdadeFilter(child, filter) {
 
 // Apply sorting
 function applySorting() {
+    console.log('Aplicando ordenação:', currentSort);
+    
     if (currentSort === 'alfabetica') {
         filteredChildren.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+        console.log('Ordenado alfabeticamente');
     } else if (currentSort === 'idade-asc') {
         filteredChildren.sort((a, b) => a.idadeNumero - b.idadeNumero);
+        console.log('Ordenado por idade crescente');
     } else if (currentSort === 'idade-desc') {
         filteredChildren.sort((a, b) => b.idadeNumero - a.idadeNumero);
+        console.log('Ordenado por idade decrescente');
     }
     // 'default' mantém a ordem original
 }
