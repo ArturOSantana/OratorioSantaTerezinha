@@ -1,6 +1,6 @@
 // Configuration
-const USE_LOCAL_DATA = false; // true = usar data.js | false = usar Google Sheets
-const SHEET_ID = '1Muvxv9Vn2-n2daLxNS6lnMcn29lL2DmXZ5Siy21mwro';
+const USE_LOCAL_DATA = false;
+const SHEET_ID = '';
 const SHEET_NAME = 'Sheet1';
 
 // State
@@ -44,7 +44,6 @@ async function loadData() {
     
     try {
         if (USE_LOCAL_DATA) {
-            // Usar dados do arquivo data.js
             if (typeof childrenData !== 'undefined') {
                 allChildren = childrenData;
                 filteredChildren = [...allChildren];
@@ -52,7 +51,6 @@ async function loadData() {
                 throw new Error('Dados não encontrados');
             }
         } else {
-            // Carregar do Google Sheets
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
             const response = await fetch(url);
             const csvText = await response.text();
@@ -68,25 +66,16 @@ async function loadData() {
     }
 }
 
-// Parse CSV data
 function parseCSV(csv) {
     const lines = csv.split('\n');
     
     const children = [];
     
-    // Pular as primeiras 6 linhas (header com quebras de linha)
-    // Os dados reais começam na linha 7 (índice 6)
     for (let i = 6; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
         
         const values = parseCSVLine(line);
-        
-        // Estrutura do CSV:
-        // 0: Carimbo, 1: Nome, 2: Idade, 3: Endereço,
-        // 4: Tem condição?, 5: Qual condição?, 6: Tem alergia?, 7: Qual alergia?,
-        // 8: Usa medicamento?, 9: Qual medicamento?, 10: Observações,
-        // 11: Nome mãe, 12: Tel mãe, 13: Nome pai, 14: Tel pai, 15: Tel emergência
         
         const nome = (values[1] || '').trim();
         const idade = (values[2] || '').trim();
@@ -104,10 +93,8 @@ function parseCSV(csv) {
         const telefonePai = (values[14] || '').trim();
         const telefoneEmergencia = (values[15] || '').trim();
         
-        // Pular se não tiver nome
         if (!nome) continue;
         
-        // Processar nome dos pais
         let nomesPais = '';
         if (nomeMae && nomePai) {
             nomesPais = `${nomeMae} / ${nomePai}`;
@@ -117,14 +104,12 @@ function parseCSV(csv) {
             nomesPais = nomePai;
         }
         
-        // Telefone de contato principal
         const telefoneContato = telefoneEmergencia || telefoneMae || telefonePai;
         
-        // Normalizar idade
         const idadeNormalizada = normalizeIdade(idade);
         
         children.push({
-            id: i - 5, // Ajustar ID para começar de 1
+            id: i - 5,
             nome: nome,
             idade: idadeNormalizada.texto,
             idadeNumero: idadeNormalizada.numero,
@@ -149,7 +134,6 @@ function parseCSV(csv) {
     return children;
 }
 
-// Parse CSV line handling quoted values
 function parseCSVLine(line) {
     const values = [];
     let current = '';
@@ -172,7 +156,6 @@ function parseCSVLine(line) {
     return values;
 }
 
-// Example data for testing
 function getExampleData() {
     return [
         {
@@ -233,40 +216,31 @@ function getExampleData() {
     ];
 }
 
-// Normalize idade to always show "X anos"
 function normalizeIdade(idade) {
     if (!idade || idade.trim() === '') {
         return { texto: 'Não informado', numero: 0 };
     }
     
-    // Extrair número da idade
     const match = idade.match(/(\d+)/);
     if (match) {
         const numero = parseInt(match[1]);
         return { texto: `${numero} anos`, numero: numero };
     }
     
-    // Se não encontrou número, retorna o texto original
     return { texto: idade, numero: 0 };
 }
 
-// Setup event listeners
 function setupEventListeners() {
-    // Search
     searchInput.addEventListener('input', debounce(handleSearch, 300));
     
-    // Filters
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => handleFilter(btn.dataset.filter));
     });
     
-    // Idade filter
     idadeFilter.addEventListener('change', handleIdadeFilter);
     
-    // Sort order
     sortOrder.addEventListener('change', handleSort);
     
-    // Close modal on escape
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('active')) {
             closeModal();
@@ -274,17 +248,14 @@ function setupEventListeners() {
     });
 }
 
-// Handle search
 function handleSearch(e) {
     const searchTerm = e.target.value.toLowerCase().trim();
     applyFiltersAndSort(searchTerm);
 }
 
-// Handle filter
 function handleFilter(filter) {
     currentFilter = filter;
     
-    // Update active button
     filterButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.filter === filter);
     });
@@ -293,25 +264,21 @@ function handleFilter(filter) {
     applyFiltersAndSort(searchTerm);
 }
 
-// Handle idade filter
 function handleIdadeFilter(e) {
     currentIdadeFilter = e.target.value;
     const searchTerm = searchInput.value.toLowerCase().trim();
     applyFiltersAndSort(searchTerm);
 }
 
-// Handle sort
 function handleSort(e) {
     currentSort = e.target.value;
     const searchTerm = searchInput.value.toLowerCase().trim();
     applyFiltersAndSort(searchTerm);
 }
 
-// Apply all filters and sort
 function applyFiltersAndSort(searchTerm = '') {
     console.log('Aplicando filtros - Busca:', searchTerm, 'Filtro:', currentFilter, 'Idade:', currentIdadeFilter, 'Ordenação:', currentSort);
     
-    // Filter
     filteredChildren = allChildren.filter(child => {
         const matchesSearch = !searchTerm || child.nome.toLowerCase().includes(searchTerm);
         const matchesFilter = applyFilter(child, currentFilter);
@@ -321,13 +288,11 @@ function applyFiltersAndSort(searchTerm = '') {
     
     console.log('Crianças filtradas:', filteredChildren.length);
     
-    // Sort
     applySorting();
     
     renderChildren();
 }
 
-// Apply filter logic
 function applyFilter(child, filter) {
     if (filter === 'all') return true;
     
@@ -344,7 +309,6 @@ function applyFilter(child, filter) {
     return false;
 }
 
-// Apply idade filter
 function applyIdadeFilter(child, filter) {
     if (filter === 'all') return true;
     
@@ -358,7 +322,6 @@ function applyIdadeFilter(child, filter) {
     return true;
 }
 
-// Apply sorting
 function applySorting() {
     console.log('Aplicando ordenação:', currentSort);
     
@@ -372,10 +335,8 @@ function applySorting() {
         filteredChildren.sort((a, b) => b.idadeNumero - a.idadeNumero);
         console.log('Ordenado por idade decrescente');
     }
-    // 'default' mantém a ordem original
 }
 
-// Render children cards
 function renderChildren() {
     childrenList.innerHTML = '';
     
@@ -392,7 +353,6 @@ function renderChildren() {
     });
 }
 
-// Create child card
 function createChildCard(child) {
     const card = document.createElement('div');
     card.className = 'child-card';
@@ -451,7 +411,6 @@ function createChildCard(child) {
     return card;
 }
 
-// Open modal with child details
 function openModal(child) {
     const hasAlergia = child.temAlergia === 'Sim';
     const hasCondicao = child.temCondicaoSaude === 'Sim';
@@ -581,13 +540,11 @@ function openModal(child) {
     document.body.style.overflow = 'hidden';
 }
 
-// Close modal
 function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = '';
 }
 
-// Update statistics
 function updateStats() {
     const totalCriancas = allChildren.length;
     const totalAlergias = allChildren.filter(c => c.temAlergia === 'Sim').length;
@@ -604,7 +561,6 @@ function updateStats() {
     document.getElementById('countAlergia').textContent = totalAlergias;
 }
 
-// Utility functions
 function getInitials(name) {
     if (!name) return '?';
     const parts = name.trim().split(' ');
@@ -638,7 +594,4 @@ function showError() {
     `;
 }
 
-// Export functions for global access
 window.closeModal = closeModal;
-
-// Made with Bob

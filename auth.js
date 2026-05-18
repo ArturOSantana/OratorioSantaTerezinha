@@ -1,6 +1,6 @@
 // Sistema de autenticação simples
 const AUTH_KEY = 'oratorio_auth';
-const AUTH_PASSWORD = 'admg123'; // MUDE ESTA SENHA!
+const AUTH_PASSWORD = '';
 
 // Verificar se está autenticado
 function isAuthenticated() {

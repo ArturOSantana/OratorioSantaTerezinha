@@ -1,20 +1,20 @@
-# 🙏 Oratório - Cadastro de Crianças
+# Oratório - Cadastro de Crianças
 
 Sistema web responsivo para gerenciamento e visualização de informações das crianças do oratório, otimizado para dispositivos móveis.
 
-## 📱 Funcionalidades
+## Funcionalidades
 
-- ✅ Visualização de lista de crianças
-- 🔍 Busca por nome
-- 🏷️ Filtros (Todas / Com Alergias)
-- 📊 Estatísticas em tempo real
-- 📱 Design responsivo mobile-first
-- 🎨 Interface moderna e intuitiva
-- ⚠️ Destaque para alergias
-- 📞 Links diretos para telefone (click-to-call)
-- 📋 Visualização detalhada de cada criança
+- Visualização de lista de crianças
+- Busca por nome
+- Filtros (Todas / Com Alergias)
+- Estatísticas em tempo real
+- Design responsivo mobile-first
+- Interface moderna e intuitiva
+- Destaque para alergias
+- Links diretos para telefone (click-to-call)
+- Visualização detalhada de cada criança
 
-## 🚀 Como Usar
+## Como Usar
 
 ### Configuração da Planilha Google Sheets
 
@@ -66,19 +66,18 @@ Sistema web responsivo para gerenciamento e visualização de informações das 
    - Clique em "Save"
    - Seu site estará disponível em: `https://seu-usuario.github.io/oratorio-cadastro/`
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 oratorio-cadastro/
-├── index.html          # Página principal
-├── styles.css          # Estilos e design
-├── script.js           # Lógica e integração com Google Sheets
-└── README.md           # Documentação
+├── index.html
+├── styles.css
+├── script.js
+├── auth.js
+└── README.md
 ```
 
-## 🎨 Personalização
-
-### Cores
+## Personalização
 
 Edite as variáveis CSS no arquivo `styles.css`:
 
@@ -92,16 +91,7 @@ Edite as variáveis CSS no arquivo `styles.css`:
 }
 ```
 
-### Título e Ícone
-
-Edite o arquivo `index.html`:
-
-```html
-<h1 class="header-title">🙏 Oratório</h1>
-<p class="header-subtitle">Cadastro de Crianças</p>
-```
-
-## 🔧 Solução de Problemas
+## Solução de Problemas
 
 ### Dados não carregam
 
@@ -116,39 +106,14 @@ Edite o arquivo `index.html`:
 2. Verifique se todos os arquivos (HTML, CSS, JS) estão no mesmo diretório
 3. Teste em modo anônimo/privado do navegador
 
-## 📱 Compatibilidade
+## Compatibilidade
 
-- ✅ Chrome (Android/iOS)
-- ✅ Safari (iOS)
-- ✅ Firefox (Android)
-- ✅ Edge
-- ✅ Samsung Internet
+- Chrome (Android/iOS)
+- Safari (iOS)
+- Firefox (Android)
+- Edge
+- Samsung Internet
 
-## 🔮 Funcionalidades Futuras
-
-- [ ] Upload e exibição de fotos das crianças
-- [ ] Exportação de dados em PDF
-- [ ] Modo escuro
-- [ ] Notificações de aniversários
-- [ ] Histórico de presença
-- [ ] Sistema de check-in/check-out
-
-## 📄 Licença
+## Licença
 
 Este projeto é de código aberto e está disponível para uso livre.
-
-## 🤝 Contribuições
-
-Contribuições são bem-vindas! Sinta-se à vontade para:
-- Reportar bugs
-- Sugerir novas funcionalidades
-- Melhorar a documentação
-- Enviar pull requests
-
-## 📞 Suporte
-
-Para dúvidas ou problemas, abra uma issue no repositório do GitHub.
-
----
-
-Desenvolvido com ❤️ para o Oratório
