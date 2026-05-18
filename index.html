@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Cadastro - Oratório">
+    <title>Oratório - Cadastro de Crianças</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="header-title">Oratório</h1>
+                <p class="header-subtitle">Cadastro de Crianças</p>
+            </div>
+        </header>
+
+        <!-- Search and Filter Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Buscar por nome..."
+                    autocomplete="off"
+                >
+            </div>
+            
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all">
+                    Todos (<span id="countAll">0</span>)
+                </button>
+                <button class="filter-btn" data-filter="alergia">
+                    Com Alergia (<span id="countAlergia">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon" id="totalCriancas">0</div>
+                <div class="stat-info">
+                    <div class="stat-label">Total de Crianças</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" id="totalAlergias">0</div>
+                <div class="stat-info">
+                    <div class="stat-label">Com Alergias</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Children List -->
+        <div class="children-list" id="childrenList">
+            <!-- Cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Carregando dados...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <h3>Nenhuma criança encontrada</h3>
+            <p>Tente ajustar os filtros ou a busca</p>
+        </div>
+    </div>
+
+    <!-- Modal for Child Details -->
+    <div class="modal" id="childModal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
