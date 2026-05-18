@@ -248,8 +248,7 @@ function handleSearch(e) {
     
     filteredChildren = allChildren.filter(child => {
         const matchesSearch = child.nome.toLowerCase().includes(searchTerm);
-        const matchesFilter = currentFilter === 'all' ||
-                            (currentFilter === 'alergia' && child.temAlergia === 'Sim');
+        const matchesFilter = applyFilter(child, currentFilter);
         return matchesSearch && matchesFilter;
     });
     
@@ -270,12 +269,29 @@ function handleFilter(filter) {
     
     filteredChildren = allChildren.filter(child => {
         const matchesSearch = !searchTerm || child.nome.toLowerCase().includes(searchTerm);
-        const matchesFilter = filter === 'all' ||
-                            (filter === 'alergia' && child.temAlergia === 'Sim');
+        const matchesFilter = applyFilter(child, filter);
         return matchesSearch && matchesFilter;
     });
     
     renderChildren();
+}
+
+// Apply filter logic
+function applyFilter(child, filter) {
+    if (filter === 'all') return true;
+    
+    if (filter === 'atencao') {
+        // Atenção especial: tem alergia OU condição de saúde OU medicamento
+        return child.temAlergia === 'Sim' ||
+               child.temCondicaoSaude === 'Sim' ||
+               child.temMedicamento === 'Sim';
+    }
+    
+    if (filter === 'alergia') {
+        return child.temAlergia === 'Sim';
+    }
+    
+    return false;
 }
 
 // Render children cards
@@ -491,10 +507,16 @@ function closeModal() {
 function updateStats() {
     const totalCriancas = allChildren.length;
     const totalAlergias = allChildren.filter(c => c.temAlergia === 'Sim').length;
+    const totalAtencao = allChildren.filter(c =>
+        c.temAlergia === 'Sim' ||
+        c.temCondicaoSaude === 'Sim' ||
+        c.temMedicamento === 'Sim'
+    ).length;
     
     document.getElementById('totalCriancas').textContent = totalCriancas;
     document.getElementById('totalAlergias').textContent = totalAlergias;
     document.getElementById('countAll').textContent = totalCriancas;
+    document.getElementById('countAtencao').textContent = totalAtencao;
     document.getElementById('countAlergia').textContent = totalAlergias;
 }
 
