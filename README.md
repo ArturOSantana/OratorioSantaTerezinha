@@ -1,140 +1,85 @@
 # Oratório - Cadastro de Crianças
 
-Sistema web responsivo para gerenciamento e visualização de informações das crianças do oratório, otimizado para dispositivos móveis.
+Sistema web para visualização de informações das crianças do oratório usando Google Sheets como banco de dados.
 
-## Funcionalidades
+## Para que serve
 
-- Visualização de lista de crianças
-- Busca por nome
-- Filtros (Todas / Com Alergias)
-- Estatísticas em tempo real
-- Design responsivo mobile-first
-- Interface moderna e intuitiva
-- Destaque para alergias
-- Links diretos para telefone (click-to-call)
-- Visualização detalhada de cada criança
+Permite visualizar e gerenciar informações das crianças cadastradas, incluindo:
+- Dados pessoais e contatos
+- Alergias e condições de saúde
+- Informações dos responsáveis
+- Observações importantes
 
-## Como Usar
+## Como usar Google Sheets como banco de dados
 
-### Configuração de Segurança
+### 1. Preparar a Planilha
 
-1. **Configure a senha de acesso:**
-   - Edite o arquivo `env.js` e altere a senha:
+Crie uma planilha no Google Sheets com as seguintes colunas (na ordem):
+
+| Coluna | Nome | Exemplo |
+|--------|------|---------|
+| A | Carimbo de data/hora | 01/01/2024 10:00:00 |
+| B | Nome da criança | João Silva |
+| C | Idade | 8 anos |
+| D | Endereço | Rua das Flores, 123 |
+| E | Tem condição de saúde? | Sim / Não |
+| F | Qual condição? | Asma |
+| G | Tem alergia? | Sim / Não |
+| H | Qual alergia? | Lactose |
+| I | Usa medicamento? | Sim / Não |
+| J | Qual medicamento? | Bombinha |
+| K | Observações | Texto livre |
+| L | Nome da mãe | Maria Silva |
+| M | Telefone da mãe | (11) 98765-4321 |
+| N | Nome do pai | José Silva |
+| O | Telefone do pai | (11) 91234-5678 |
+| P | Telefone de emergência | (11) 99999-9999 |
+
+### 2. Tornar a Planilha Pública
+
+1. Abra sua planilha
+2. Clique em "Compartilhar"
+3. Em "Acesso geral", selecione "Qualquer pessoa com o link"
+4. Permissão: "Leitor"
+5. Clique em "Concluído"
+
+### 3. Configurar o Sistema
+
+1. Copie o ID da planilha da URL:
+   ```
+   https://docs.google.com/spreadsheets/d/[COPIE_ESTE_ID]/edit
+   ```
+
+2. Edite o arquivo `env.js`:
    ```javascript
-   window.ENV_AUTH_PASSWORD = 'sua_senha_segura';
-   ```
-   - Faça commit e push do arquivo `env.js` para o GitHub
-   - A senha ficará visível no repositório, então use uma senha específica para este sistema
-
-### Configuração da Planilha Google Sheets
-
-1. **Torne sua planilha pública:**
-   - Abra sua planilha no Google Sheets
-   - Clique em "Compartilhar" no canto superior direito
-   - Em "Acesso geral", selecione "Qualquer pessoa com o link"
-   - Certifique-se de que está como "Leitor"
-
-2. **Estrutura da Planilha:**
-   
-   A planilha deve ter as seguintes colunas (os nomes podem variar):
-   
-   | Nome | Idade | Data de Nascimento | Telefone | Responsável | Endereço | Alergia | Observações |
-   |------|-------|-------------------|----------|-------------|----------|---------|-------------|
-   | João Silva | 8 anos | 15/03/2018 | (11) 98765-4321 | Maria Silva | Rua das Flores, 123 | Lactose | Atenção especial |
-
-3. **Configurar o ID da Planilha:**
-   
-   No arquivo `script.js`, atualize a linha 2 com o ID da sua planilha:
-   ```javascript
-   const SHEET_ID = 'SEU_ID_AQUI';
-   ```
-   
-   O ID está na URL da planilha:
-   ```
-   https://docs.google.com/spreadsheets/d/[ID_DA_PLANILHA]/edit
+   window.ENV_AUTH_PASSWORD = 'sua_senha';
+   window.ENV_SHEET_ID = 'ID_DA_SUA_PLANILHA';
    ```
 
-### Hospedagem no GitHub Pages
+3. Faça commit e push para o GitHub
 
-1. **Criar Repositório:**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   ```
+### 4. Ativar GitHub Pages
 
-2. **Enviar para GitHub:**
-   ```bash
-   git remote add origin https://github.com/seu-usuario/oratorio-cadastro.git
-   git branch -M main
-   git push -u origin main
-   ```
+1. Vá em Settings > Pages
+2. Source: "main" branch
+3. Save
+4. Acesse: `https://seu-usuario.github.io/nome-repositorio/`
 
-3. **Ativar GitHub Pages:**
-   - Vá para Settings > Pages
-   - Em "Source", selecione "main" branch
-   - Clique em "Save"
-   - Seu site estará disponível em: `https://seu-usuario.github.io/oratorio-cadastro/`
-
-## Estrutura do Projeto
+## Estrutura de Arquivos
 
 ```
-oratorio-cadastro/
-├── index.html
-├── styles.css
-├── script.js
-├── auth.js
-├── env.js              (configure sua senha aqui)
-├── env.example.js      (exemplo de configuração)
-└── README.md
+├── index.html       - Interface
+├── script.js        - Lógica e conexão com Sheets
+├── styles.css       - Estilos
+├── auth.js          - Autenticação
+├── env.js           - Configurações (senha e ID da planilha)
+└── README.md        - Documentação
 ```
+
+## Atualizar Dados
+
+Para atualizar os dados, basta editar a planilha do Google Sheets. O sistema carrega os dados automaticamente a cada acesso.
 
 ## Segurança
 
-IMPORTANTE: Como o GitHub Pages é um serviço de hospedagem estática, a senha ficará visível no código fonte. Este sistema de autenticação é adequado para:
-- Controle de acesso básico
-- Dados não sensíveis
-- Uso interno/comunitário
-
-Para dados sensíveis, considere usar um backend com autenticação real.
-
-## Personalização
-
-Edite as variáveis CSS no arquivo `styles.css`:
-
-```css
-:root {
-    --primary-color: #6366f1;      /* Cor principal */
-    --secondary-color: #8b5cf6;    /* Cor secundária */
-    --success-color: #10b981;      /* Cor de sucesso */
-    --warning-color: #f59e0b;      /* Cor de aviso */
-    --danger-color: #ef4444;       /* Cor de perigo */
-}
-```
-
-## Solução de Problemas
-
-### Dados não carregam
-
-1. Verifique se a planilha está pública
-2. Confirme se o ID da planilha está correto no `script.js`
-3. Verifique o console do navegador (F12) para erros
-4. Se necessário, o sistema usará dados de exemplo automaticamente
-
-### Layout quebrado no mobile
-
-1. Limpe o cache do navegador
-2. Verifique se todos os arquivos (HTML, CSS, JS) estão no mesmo diretório
-3. Teste em modo anônimo/privado do navegador
-
-## Compatibilidade
-
-- Chrome (Android/iOS)
-- Safari (iOS)
-- Firefox (Android)
-- Edge
-- Samsung Internet
-
-## Licença
-
-Este projeto é de código aberto e está disponível para uso livre.
+A senha configurada em `env.js` ficará visível no código fonte (GitHub Pages é estático). Use apenas para controle de acesso básico.
