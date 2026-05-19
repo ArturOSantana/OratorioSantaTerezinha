@@ -19,12 +19,12 @@ Sistema web responsivo para gerenciamento e visualização de informações das 
 ### Configuração de Segurança
 
 1. **Configure a senha de acesso:**
-   - Copie o arquivo `env.example.js` para `env.js`
-   - Edite `env.js` e altere a senha:
+   - Edite o arquivo `env.js` e altere a senha:
    ```javascript
    window.ENV_AUTH_PASSWORD = 'sua_senha_segura';
    ```
-   - O arquivo `env.js` está no `.gitignore` e não será enviado ao repositório
+   - Faça commit e push do arquivo `env.js` para o GitHub
+   - A senha ficará visível no repositório, então use uma senha específica para este sistema
 
 ### Configuração da Planilha Google Sheets
 
@@ -84,8 +84,19 @@ oratorio-cadastro/
 ├── styles.css
 ├── script.js
 ├── auth.js
+├── env.js              (configure sua senha aqui)
+├── env.example.js      (exemplo de configuração)
 └── README.md
 ```
+
+## Segurança
+
+IMPORTANTE: Como o GitHub Pages é um serviço de hospedagem estática, a senha ficará visível no código fonte. Este sistema de autenticação é adequado para:
+- Controle de acesso básico
+- Dados não sensíveis
+- Uso interno/comunitário
+
+Para dados sensíveis, considere usar um backend com autenticação real.
 
 ## Personalização
 

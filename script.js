@@ -125,7 +125,8 @@ function parseCSV(csv) {
             temMedicamento: temMedicamento,
             medicamento: qualMedicamento,
             endereco: endereco,
-            observacoes: observacoes
+            observacoes: observacoes,
+            foto: null
         });
     }
     
@@ -158,61 +159,8 @@ function parseCSVLine(line) {
 
 function getExampleData() {
     return [
-        {
-            id: 1,
-            nome: 'João Silva',
-            idade: '8 anos',
-            dataNascimento: '15/03/2018',
-            telefone: '(11) 98765-4321',
-            alergia: 'Lactose',
-            observacoes: 'Precisa de atenção especial na alimentação',
-            responsavel: 'Maria Silva',
-            endereco: 'Rua das Flores, 123'
-        },
-        {
-            id: 2,
-            nome: 'Ana Santos',
-            idade: '7 anos',
-            dataNascimento: '22/07/2019',
-            telefone: '(11) 91234-5678',
-            alergia: '',
-            observacoes: '',
-            responsavel: 'José Santos',
-            endereco: 'Av. Principal, 456'
-        },
-        {
-            id: 3,
-            nome: 'Pedro Oliveira',
-            idade: '9 anos',
-            dataNascimento: '10/11/2017',
-            telefone: '(11) 99876-5432',
-            alergia: 'Amendoim, Glúten',
-            observacoes: 'Alergia severa - sempre verificar ingredientes',
-            responsavel: 'Carla Oliveira',
-            endereco: 'Rua do Comércio, 789'
-        },
-        {
-            id: 4,
-            nome: 'Mariana Costa',
-            idade: '6 anos',
-            dataNascimento: '05/01/2020',
-            telefone: '(11) 97654-3210',
-            alergia: '',
-            observacoes: 'Muito tímida, precisa de incentivo',
-            responsavel: 'Roberto Costa',
-            endereco: 'Rua Nova, 321'
-        },
-        {
-            id: 5,
-            nome: 'Lucas Ferreira',
-            idade: '10 anos',
-            dataNascimento: '18/09/2016',
-            telefone: '(11) 96543-2109',
-            alergia: 'Frutos do mar',
-            observacoes: '',
-            responsavel: 'Paula Ferreira',
-            endereco: 'Av. Central, 654'
-        }
+        
+            
     ];
 }
 
@@ -364,7 +312,11 @@ function createChildCard(child) {
     
     card.innerHTML = `
         <div class="child-header">
-            <div class="child-avatar">${initials}</div>
+            ${child.foto ? `
+                <img src="${child.foto}" alt="${escapeHtml(child.nome)}" class="child-avatar child-photo">
+            ` : `
+                <div class="child-avatar">${initials}</div>
+            `}
             <div class="child-info">
                 <div class="child-name">${escapeHtml(child.nome)}</div>
                 <div class="child-age">${escapeHtml(child.idade)}</div>
@@ -373,7 +325,7 @@ function createChildCard(child) {
         <div class="child-details">
             ${child.telefoneContato ? `
                 <div class="detail-item">
-                    <div class="detail-icon">☎</div>
+                    <div class="detail-icon"><i class="fas fa-phone"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Telefone</div>
                         <div class="detail-value">
@@ -384,7 +336,7 @@ function createChildCard(child) {
             ` : ''}
             ${hasAlergia || hasCondicao ? `
                 <div class="detail-item">
-                    <div class="detail-icon">!</div>
+                    <div class="detail-icon"><i class="fas fa-exclamation-triangle"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">${hasAlergia && hasCondicao ? 'Alergia e Condição' : hasAlergia ? 'Alergia' : 'Condição'}</div>
                         <div class="detail-value">
@@ -397,7 +349,7 @@ function createChildCard(child) {
                 </div>
             ` : `
                 <div class="detail-item">
-                    <div class="detail-icon">✓</div>
+                    <div class="detail-icon"><i class="fas fa-check-circle"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Saúde</div>
                         <div class="detail-value">Sem restrições</div>
@@ -418,14 +370,18 @@ function openModal(child) {
     
     modalBody.innerHTML = `
         <div class="modal-header">
-            <div class="modal-avatar">${initials}</div>
+            ${child.foto ? `
+                <img src="${child.foto}" alt="${escapeHtml(child.nome)}" class="modal-avatar modal-photo">
+            ` : `
+                <div class="modal-avatar">${initials}</div>
+            `}
             <div class="modal-name">${escapeHtml(child.nome)}</div>
             <div class="modal-age">${escapeHtml(child.idade)}</div>
         </div>
         <div class="modal-details">
             ${child.nomesPais ? `
                 <div class="detail-item">
-                    <div class="detail-icon">👤</div>
+                    <div class="detail-icon"><i class="fas fa-users"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Responsáveis</div>
                         <div class="detail-value">${escapeHtml(child.nomesPais)}</div>
@@ -434,7 +390,7 @@ function openModal(child) {
             ` : ''}
             ${child.telefoneEmergencia ? `
                 <div class="detail-item">
-                    <div class="detail-icon">☎</div>
+                    <div class="detail-icon"><i class="fas fa-ambulance"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Emergência</div>
                         <div class="detail-value">
@@ -445,7 +401,7 @@ function openModal(child) {
             ` : ''}
             ${child.telefoneMae ? `
                 <div class="detail-item">
-                    <div class="detail-icon">☎</div>
+                    <div class="detail-icon"><i class="fas fa-phone"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Tel. Mãe</div>
                         <div class="detail-value">
@@ -457,7 +413,7 @@ function openModal(child) {
             ` : ''}
             ${child.telefonePai ? `
                 <div class="detail-item">
-                    <div class="detail-icon">☎</div>
+                    <div class="detail-icon"><i class="fas fa-phone"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Tel. Pai</div>
                         <div class="detail-value">
@@ -469,7 +425,7 @@ function openModal(child) {
             ` : ''}
             ${child.endereco ? `
                 <div class="detail-item">
-                    <div class="detail-icon">📍</div>
+                    <div class="detail-icon"><i class="fas fa-map-marker-alt"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Endereço</div>
                         <div class="detail-value">
@@ -481,7 +437,7 @@ function openModal(child) {
             ` : ''}
             ${hasAlergia ? `
                 <div class="detail-item">
-                    <div class="detail-icon">!</div>
+                    <div class="detail-icon"><i class="fas fa-allergies"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Alergia</div>
                         <div class="detail-value">${escapeHtml(child.alergia)}</div>
@@ -490,7 +446,7 @@ function openModal(child) {
                 </div>
             ` : `
                 <div class="detail-item">
-                    <div class="detail-icon">✓</div>
+                    <div class="detail-icon"><i class="fas fa-check-circle"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Alergia</div>
                         <div class="detail-value">Não possui</div>
@@ -499,7 +455,7 @@ function openModal(child) {
             `}
             ${hasCondicao ? `
                 <div class="detail-item">
-                    <div class="detail-icon">+</div>
+                    <div class="detail-icon"><i class="fas fa-heartbeat"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Condição de Saúde</div>
                         <div class="detail-value">${escapeHtml(child.condicaoSaude)}</div>
@@ -508,7 +464,7 @@ function openModal(child) {
                 </div>
             ` : `
                 <div class="detail-item">
-                    <div class="detail-icon">✓</div>
+                    <div class="detail-icon"><i class="fas fa-check-circle"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Condição de Saúde</div>
                         <div class="detail-value">Não possui</div>
@@ -517,7 +473,7 @@ function openModal(child) {
             `}
             ${child.temMedicamento === 'Sim' ? `
                 <div class="detail-item">
-                    <div class="detail-icon">Rx</div>
+                    <div class="detail-icon"><i class="fas fa-pills"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Medicamento</div>
                         <div class="detail-value">${escapeHtml(child.medicamento)}</div>
@@ -526,7 +482,7 @@ function openModal(child) {
             ` : ''}
             ${child.observacoes ? `
                 <div class="detail-item">
-                    <div class="detail-icon">i</div>
+                    <div class="detail-icon"><i class="fas fa-info-circle"></i></div>
                     <div class="detail-content">
                         <div class="detail-label">Observações</div>
                         <div class="detail-value">${escapeHtml(child.observacoes)}</div>
@@ -588,9 +544,9 @@ function debounce(func, wait) {
 
 function showError() {
     loading.innerHTML = `
-        <div class="empty-icon">⚠️</div>
+        <div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div>
         <h3>Erro ao carregar dados</h3>
-        <p>Não foi possível carregar os dados da planilha. Usando dados de exemplo.</p>
+        <p>Não foi possível carregar os dados da planilha.</p>
     `;
 }
 
